@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<playground version='6.0' target-platform='ios'>
+    <pages>
+        <page name='简介'/>
+        <page name='Swift初见'/>
+        <page name='常量变量'/>
+        <page name='可选项'/>
+        <page name='控制流'/>
+        <page name='循环'/>
+        <page name='字符串'/>
+        <page name='集合'/>
+        <page name='函数'/>
+        <page name='闭包'/>
+        <page name='面向对象'/>
+    </pages>
+</playground>
