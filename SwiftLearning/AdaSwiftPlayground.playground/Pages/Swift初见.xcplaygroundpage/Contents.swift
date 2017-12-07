@@ -123,7 +123,7 @@ let interestiongNumbers = [
 
 var largest = 0
 
-for (kind,numbers) in interestiongNumbers {
+for (_,numbers) in interestiongNumbers {
     for number in numbers {
         if number > largest {
             largest = number
@@ -245,3 +245,111 @@ numbers.map({
     let result = 3 * number
     return result
 })
+
+
+//闭包作为回调函数，可以忽略参数类型和返回值 单个语句闭包会把它当作结果返回
+
+let mappedNumbers = numbers.map({number in 3 * number})
+print(mappedNumbers)
+
+
+//可以使用参数的位置来引用参数，闭包作为最后一个参数时，可以省略括号
+let sortedNumbers = numbers.sorted { $0 > $1 }
+print(sortedNumbers)
+
+
+
+
+// MARK:   ------------ 对象、类-------------
+
+class Shape {
+    var numberOfSides = 0
+    func simpleDescription() -> String {
+        return "A shape with \(numberOfSides) sides"
+    }
+    
+}
+
+var shape = Shape()
+
+shape.numberOfSides = 7
+var shapeDescription = shape.simpleDescription()
+
+
+//注意self被用来区别实例变量。当你创建实例的时候，像传入函数参数一样给类传入构造器(init)的参数
+class NameShape {
+    var numberOfSides: Int = 0
+    var name: String
+    
+    init(name:String) {
+        self.name = name;
+    }
+    
+    func simpleDescription() -> String {
+        return "A shape with \(numberOfSides) sides"
+    }
+}
+
+//子类继承 重写父类方法需要 override
+class Square: NameShape {
+    var sideLength: Double
+    
+    init(sideLength: Double,name: String) {
+        self.sideLength = sideLength;
+        super.init(name: name);
+        numberOfSides = 4;
+    }
+    
+    func area() -> Double {
+        return sideLength * sideLength
+    }
+    
+    override func simpleDescription() -> String {
+        return "A square with sides of length \(sideLength)."
+    }
+}
+
+let test = Square(sideLength: 5.2,name:"my test square")
+test.area()
+test.simpleDescription
+
+//除了简单的存储属性外，属性还有getter setter
+
+class EquilateralTriangle: NameShape {
+    var sideLength: Double = 0.0
+    
+    init(sideLength:Double, name:String) {
+        self.sideLength = sideLength;
+        super.init(name: name);
+        numberOfSides = 3
+    }
+    
+    var perimeter: Double {
+        get {
+            return 3.0 * sideLength
+        }
+        set {
+            sideLength = newValue / 3.0
+        }
+    }
+    
+    override func simpleDescription() -> String {
+        return "An equilateral triangle with sides of length \(sideLength)."
+    }
+}
+
+var triangle = EquilateralTriangle(sideLength: 3.1, name:"a triangle")
+print(triangle.perimeter)
+triangle.perimeter = 9.9
+print(triangle.sideLength)
+
+
+//如果不需要计算属性，但是仍然想在设置新值前后运行代码，可以使用willSet didSet
+
+class TriangleAndSquare {
+    var triangle: EquilateralTriangle {
+        
+    }
+    
+}
+
