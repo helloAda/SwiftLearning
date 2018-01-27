@@ -347,9 +347,118 @@ print(triangle.sideLength)
 //如果不需要计算属性，但是仍然想在设置新值前后运行代码，可以使用willSet didSet
 
 class TriangleAndSquare {
+    
     var triangle: EquilateralTriangle {
-        
+        willSet {
+            square.sideLength = newValue.sideLength
+        }
     }
     
+    var square: Square {
+        willSet {
+            triangle.sideLength = newValue.sideLength
+        }
+    }
+    
+    init(size: Double, name: String) {
+        square = Square(sideLength: size, name: name)
+        triangle = EquilateralTriangle(sideLength: size, name: name)
+    }
 }
+
+var triangleAndSquare = TriangleAndSquare(size: 10, name: "another test shape")
+print(triangleAndSquare.square.sideLength)
+print(triangleAndSquare.triangle.sideLength)
+triangleAndSquare.square = Square(sideLength: 50, name: "larger square")
+print(triangleAndSquare.triangle.sideLength)
+
+let optionalSquare: Square? = Square(sideLength: 2.5, name: "option square")
+let sideLength = optionalSquare?.sideLength
+
+
+
+// MARK: 枚举和结构体
+
+enum Rank: Int {
+    case ace = 1
+    case two, three, four, five, six, seven, eight, nine, ten
+    case jack, queen, king
+    func simpleDescription() -> String {
+        switch self {
+        case .ace:
+            return "ace"
+        case .jack:
+            return "jack"
+        case .queen:
+            return "queen"
+        case .king:
+            return "king"
+        default:
+            return String(self.rawValue)
+        }
+    }
+}
+
+let ace = Rank.ace
+let aceRawValue = ace.rawValue
+
+if let convertedRank = Rank(rawValue: 3) {
+    let threeDescription = convertedRank.simpleDescription()
+    print(threeDescription)
+}
+
+//  枚举的成员值是实际值，并不是原始值的另一种表达方法。如果没有比较有意义的原始值，就不需要提供原始值
+
+enum Suit {
+    case spades,hearts,diamonds,clubs
+    func simpleDescription() -> String {
+        switch self {
+        case .spades:
+            return "spades"
+        case .hearts:
+            return "hearts"
+        case .diamonds:
+            return "diamonds"
+        case .clubs:
+            return "clubs"
+        }
+    }
+}
+
+let hearts = Suit.hearts
+let heartsDescription = hearts.simpleDescription()
+
+// 一个枚举成员的实例可以有实例值。相同枚举成员的实例可以有不同的值。创建实例的时候传入值即可
+
+enum ServerResponse {
+    case result(String,String)
+    case failure(String)
+}
+
+let success = ServerResponse.result("6:00 am", "8:09 pm")
+let failure = ServerResponse.failure("Out of cheese.")
+
+switch success {
+case let .result(sunrise, sunset):
+    print("Sunrise is at \(sunrise) and sunset is at \(sunset)")
+case let .failure(message):
+    print("Failure...  \(message)")
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
