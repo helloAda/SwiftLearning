@@ -445,16 +445,104 @@ case let .failure(message):
     print("Failure...  \(message)")
 }
 
+//结构体
+struct Card {
+    var rank: Rank
+    var suit: Suit
+    func simpleDescription() -> String {
+        return "The \(rank.simpleDescription()) of \(suit.simpleDescription())"
+    }
+}
+
+let threeOfSpades = Card(rank: .three, suit:.spades)
+let threeOfSpadesDescription = threeOfSpades.simpleDescription()
+
+
+// MARK: 协议和扩展
+
+protocol ExampleProtocol {
+    var simpleDescription: String {get}
+    mutating func adjust()
+}
+
+//类、枚举、结构体逗可以实现协议
+
+class SimpleClass:ExampleProtocol {
+    var simpleDescription: String = "A very simple class."
+    var anotherProperty: Int = 69105
+    func adjust() {
+        simpleDescription += " Now 100% adjusted."
+    }
+}
+var a = SimpleClass()
+a.adjust()
+let aDescription = a.simpleDescription
+
+struct SimpleStructure: ExampleProtocol {
+    var simpleDescription: String = "A simple struture"
+    mutating func adjust() {
+        simpleDescription += " (adjusted)"
+    }
+}
+
+var b = SimpleStructure()
+b.adjust()
+let bDescription = b.simpleDescription
+
+//可是使用 extension 来为现有的类型添加功能，比如新的方法和计算属性。下面是让Int类型遵循ExampleProtocol协议
+extension Int: ExampleProtocol {
+    var simpleDescription: String {
+        return "The number \(self)"
+    }
+    mutating func adjust() {
+        self += 42
+    }
+}
+print(7.simpleDescription)
+
+//可是创建一个有不同类型但是都实现协议的对象集合。当你在处理类型是协议的值时，协议外定义的方法不可用。
+let protocolValue: ExampleProtocol = a
+print(protocolValue.simpleDescription)
+//print(protocolValue.anotherProperty)//编译器会把它的类型当做ExampleProtocol，所以不能调用协议外实现的方法、属性
 
 
 
+// MARK: 错误处理
 
+//Error协议
+enum PrinterError: Error {
+    case outOfPaper
+    case noToner
+    case onFire
+}
 
+//使用throw来抛出错误
+func send(job: Int, toPrinter printerName: String) throws -> String {
+    if printerName == "Never Has Toner" {
+        throw PrinterError.noToner
+    }
+    return "Job sent"
+}
 
+//错误处理 可以是do-catch 在do中使用try来标记可以抛出错误的代码
+do {
+    let printerResponse = try send(job: 1040, toPrinter: "Never Has Toner")
+    print(printerResponse)
+} catch  {
+    print(error)
+}
 
-
-
-
+//可以使用多个catch块来处理特定错误
+do {
+    let printerResponse = try send(job: 1440, toPrinter: "Never Has Toner")
+    print(printerResponse)
+} catch PrinterError.onFire {
+    print("I'll just put this over here, with the rest of the fire.")
+} catch let printerError as PrinterError {
+    print("Printer error: \(printerError).")
+} catch {
+    print(error)
+}
 
 
 
