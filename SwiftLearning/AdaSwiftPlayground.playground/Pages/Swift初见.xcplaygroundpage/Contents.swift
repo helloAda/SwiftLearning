@@ -545,8 +545,61 @@ do {
 }
 
 
+//另一种处理错误的方式try? 抛出错误则返回nil
+let printerSuccess = try? send(job: 1884, toPrinter: "Mergenthaler")
+let printerFailure = try? send(job: 1885, toPrinter: "Never Has Toner")
+
+//使用defer代码块来表示在函数返回前，函数中最后执行的代码。无论函数是否会抛出错误，这段代码都将执行
+var fridgelsOpen = false
+var fridgeContent = ["milk","eggs","leftovers"]
+
+func fridgeContains(_ food: String) -> Bool {
+    fridgelsOpen = true
+    defer {
+        fridgelsOpen = false
+    }
+    let result = fridgeContent.contains(food)
+    return result
+}
+
+fridgeContains("banana")
+print(fridgelsOpen)
 
 
 
+// MARK: 泛型
 
+func makeArray<Item>(repeating item: Item, numberOfTimes: Int) -> [Item] {
+    var result = [Item]()
+    for _ in 0..<numberOfTimes {
+        result.append(item)
+    }
+    return result
+}
+
+makeArray(repeating: "knock", numberOfTimes: 4)
+
+//可以创建泛型函数、方法、类、枚举和结构体
+
+//重新实现Swift标准库的可选类型
+enum OptionalValue<Wrapped> {
+    case none
+    case some(Wrapped)
+}
+
+var possibleInter: OptionalValue<Int> = .none
+possibleInter = .some(100)
+
+func anyCommonElements<T: Sequence, U: Sequence> (_ lhs: T, _ rhs: U) -> Bool where T.Iterator.Element: Equatable, T.Iterator.Element == U.Iterator.Element {
+    for lhsItem in lhs {
+        for rhsItem in rhs {
+            if lhsItem == rhsItem {
+                return true
+            }
+        }
+    }
+    return false
+}
+
+anyCommonElements([1,2,3], [3])
 
