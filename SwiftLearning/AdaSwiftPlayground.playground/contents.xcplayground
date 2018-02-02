@@ -4,5 +4,6 @@
         <page name='简介'/>
         <page name='Swift初见'/>
         <page name='基础部分'/>
+        <page name='基本运算符'/>
     </pages>
 </playground>
