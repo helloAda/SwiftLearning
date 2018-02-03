@@ -94,5 +94,94 @@ var userDefinedColorName: String?
 
 var colorNameToUse = userDefinedColorName ?? defaultColorName
 
+userDefinedColorName = "green"
+colorNameToUse = userDefinedColorName ?? defaultColorName
+
+
+//区间运算符
+
+//闭区间运算符
+for index in 1...5 {
+    print("\(index) * 5 = \(index * 5)")
+}
+
+//半开半闭区间运算符
+
+let names = ["Anna","Alex","Brian","Jack"]
+let count = names.count
+
+for i in 0..<count {
+    print("Person \(i + 1) is called \(names[i])")
+}
+
+
+//单向闭区间
+for name in names[2...] {
+    print(name)
+}
+
+for name in names[...2] {
+    print(name)
+}
+
+//单向半开半闭区间
+for name in names[..<2] {
+    print(name)
+}
+
+let range = ...5
+range.contains(7)
+range.contains(4)
+range.contains(-1)
+
+
+//逻辑运算符
+
+//逻辑非
+let allowedEntry = false
+if !allowedEntry {
+    print("ACCESS DENIED")
+}
+
+//逻辑与运算符
+let enteredDoorCode = true
+let passedRetinaScan = false
+if enteredDoorCode && passedRetinaScan {
+    print("Welcome!")
+} else {
+    print("ACCESS DENIED")
+}
+
+
+//逻辑或运算符
+
+let hasDoorKey = false
+let knowsOverridePassword = true
+if hasDoorKey || knowsOverridePassword {
+    print("Welcome!")
+} else {
+    print("ACCESS DENIED")
+}
+
+//逻辑运算符组合计算
+if enteredDoorCode && passedRetinaScan || hasDoorKey || knowsOverridePassword {
+    print("Welcome!")
+} else {
+    print("ACCESS DENIED")
+}
+
+//使用括号来明确优先级
+
+if (enteredDoorCode && passedRetinaScan) || hasDoorKey || knowsOverridePassword {
+    print("Welcome!")
+} else {
+    print("ACCESS DENIED")
+}
+
+
+
+
+
+
 
 
