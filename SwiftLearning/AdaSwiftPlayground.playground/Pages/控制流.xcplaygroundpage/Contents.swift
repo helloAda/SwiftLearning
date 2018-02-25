@@ -331,9 +331,30 @@ print("Game over!")
 
 
 
+//提前推出
+func greet(person: [String: String]) {
+    guard let name = person["name"] else { return }
+    print("Hello \(name)")
+    
+    guard let location = person["location"] else {
+        print("I hope the weather is nice near you.")
+        return
+    }
+    
+    print("I hope the weather is nice in \(location).")
+}
+
+greet(person: ["name": "John"])
+greet(person: ["name": "Jane", "location": "Cupertino"])
 
 
+//检测API的可用性
 
+if #available(iOS 10, macOS 10.12, *) {
+    //在iOS 10 或者 macOS 10.12 使用的API
+} else {
+    //使用其他版本的API
+}
 
 
 
