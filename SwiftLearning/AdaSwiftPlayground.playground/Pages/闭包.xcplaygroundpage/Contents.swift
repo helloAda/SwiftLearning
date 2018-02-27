@@ -130,3 +130,116 @@ func makeIncrementer(forIncrement amount: Int) -> () -> Int {
     return incrementer
 }
 
+let incrementByTen = makeIncrementer(forIncrement: 10)
+incrementByTen()
+incrementByTen()
+incrementByTen()
+
+let incrementBySeven = makeIncrementer(forIncrement: 7)
+incrementBySeven()
+incrementByTen()
+
+
+
+//闭包是引用类型
+
+/*
+ 上面的例子中，incrementBySeven 和 incrementByTen 都是常量，但是这些常量指向的闭包仍然可以增加其捕获的变量的值。这是因为函数和闭包都是引用类型
+ 
+ 无论你将函数或闭包赋值给一个常量还是变量，你实际上都是将常量或变量的值设置为对应函数或闭包的引用
+ 这也意味着如果你将闭包赋值给了两个不同的常量或变量，两个值都会指向同一个闭包
+ */
+
+let alsoIncrementByten = incrementByTen
+alsoIncrementByten()
+
+
+//逃逸闭包
+
+/*
+ 当一个闭包作为参数传到一个函数中，但是这个闭包在函数返回之后才被执行，我们称该闭包从函数中逃逸。当你定义接受闭包作为参数的函数时，你可以在参数名之前标注 @escaping，用来指明这个闭包是允许“逃逸”出这个函数的
+ */
+
+var completionHandlers:[() -> Void] = []
+func someFunctionWithEscapingClosure(completionHandler: @escaping () -> Void) {
+    completionHandlers.append(completionHandler)
+}
+
+//在逃逸闭包中必须显示的引用self
+func someFunctionWithNonescapingClosure(closure: () -> Void) {
+    closure()
+}
+
+class SomeClass {
+    var x = 10
+    func doSomething() {
+        someFunctionWithEscapingClosure {
+            self.x = 100
+        }
+        someFunctionWithNonescapingClosure {
+            x = 200
+        }
+    }
+}
+
+let instance = SomeClass()
+instance.doSomething()
+print(instance.x)
+
+completionHandlers.first?()
+print(instance.x)
+
+
+
+//自动闭包
+
+/*
+ 自动闭包是一种自动创建的闭包，用于包装传递给函数作为参数的表达式。这种闭包不接受任何参数，当它被调用的时候，会返回被包装在其中的表达式的值。这种便利语法让你能够省略闭包的花括号，用一个普通的表达式来代替显式的闭包
+ */
+
+/*
+ 自动闭包让你能够延迟求值，因为直到你调用这个闭包，代码段才会被执行。延迟求值对于那些有副作用和高计算成本的代码来说是很有益处的，因为它使得你能控制代码的执行时机。下面的代码展示了闭包如何延时求值
+  */
+var customersInLine = ["Chris", "Alex", "Ewa", "Barry", "Daniella"]
+print(customersInLine.count)
+
+let customerProvider = { customersInLine.remove(at: 0) }
+print(customersInLine.count)
+
+print("Now serving \(customerProvider())!")
+print(customersInLine.count)
+
+
+//将闭包作为参数传递给函数时，你能获得同样的延时求值行为。
+
+func serve(customer customerProvider: () -> String) {
+    print("Now serving \(customerProvider())!")
+}
+
+serve(customer: {customersInLine.remove(at: 0)})
+
+
+func serve(customer customerProvider: @autoclosure () -> String) {
+    print("Now serving \(customerProvider())!")
+}
+
+serve(customer: customersInLine.remove(at: 0))
+
+
+//自动闭包可以逃逸
+
+var customerProviders: [() -> String] = []
+func collectCustomerProviders(_ customerProvider: @autoclosure @escaping () -> String) {
+    customerProviders.append(customerProvider)
+}
+
+collectCustomerProviders(customersInLine.remove(at: 0))
+collectCustomerProviders(customersInLine.remove(at: 0))
+
+print("Collected \(customerProviders.count) closures.")
+
+for customerProvider in customerProviders {
+    print("Now serving \(customerProvider())!")
+}
+
+
