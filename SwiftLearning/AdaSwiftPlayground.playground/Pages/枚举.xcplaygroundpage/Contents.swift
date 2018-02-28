@@ -90,6 +90,62 @@ enum ASCIIControlCharacter: Character {
 
 //在使用原始值为整数或者字符串类型的枚举时，不需要显式地为每一个枚举成员设置原始值，Swift 将会自动为你赋值
 
+enum Planet1: Int {
+    case mercury = 1, venus, earth, mars, jupiter, saturn, nuanus, neptune
+}
+// 如果是字符串作为枚举类型原始值时，每个枚举成员的隐式原始值为该枚举成员的名称
+
+enum CompassPoint1: String {
+    case north, south, east, west
+}
+
+
+let earthsOrder = Planet1.earth.rawValue
+let sunsetDirection = CompassPoint1.west.rawValue
+
+
+//使用原始值初始化枚举实例
+let possiblePlanet = Planet1(rawValue: 7)
+
+
+let positionToFind = 11
+if let somePlanet = Planet1(rawValue: positionToFind) {
+    switch somePlanet {
+    case .earth:
+        print("Mostly harmless")
+    default:
+        print("Not a safe place for humans")
+    }
+} else {
+    print("There isn't a planet at position \(positionToFind)")
+}
+
+//递归枚举
+
+enum ArithmeticExpression {
+    case number(Int)
+    indirect case addition(ArithmeticExpression, ArithmeticExpression)
+    indirect case multiplication(ArithmeticExpression, ArithmeticExpression)
+}
+
+let five = ArithmeticExpression.number(5)
+let four = ArithmeticExpression.number(4)
+let sum = ArithmeticExpression.addition(five, four)
+let product = ArithmeticExpression.multiplication(sum, ArithmeticExpression.number(2))
+
+
+func evaluate(_ expression: ArithmeticExpression) -> Int {
+    switch expression {
+    case let .number(value):
+        return value
+    case let .addition(left, right):
+        return evaluate(left) + evaluate(right)
+    case let .multiplication(left, right):
+        return evaluate(left) * evaluate(right)
+    }
+}
+
+
 
 
 
